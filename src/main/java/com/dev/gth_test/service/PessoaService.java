@@ -48,7 +48,7 @@ public class PessoaService {
         return task.calculateIdealWeight(id);
     }
 
-    private Pessoa toEntity(PessoaDTO dto) {
+    Pessoa toEntity(PessoaDTO dto) {
         Pessoa pessoa = new Pessoa();
         pessoa.setId(dto.getId());
         pessoa.setNome(dto.getNome());
@@ -60,7 +60,7 @@ public class PessoaService {
         return pessoa;
     }
 
-    private PessoaDTO toDTO(Pessoa pessoa) {
+    PessoaDTO toDTO(Pessoa pessoa) {
         return new PessoaDTO(
                 pessoa.getId(),
                 pessoa.getNome(),
