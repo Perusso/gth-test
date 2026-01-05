@@ -21,7 +21,6 @@ public class PessoaService {
     }
 
     public PessoaDTO createPessoa(@Valid PessoaDTO pessoaDTO) {
-
         Pessoa pessoa = toEntity(pessoaDTO);
         task.createPessoa(pessoa);
         return toDTO(pessoa);
