@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class Task {
@@ -18,6 +19,14 @@ public class Task {
     }
 
     public Pessoa createPessoa(Pessoa pessoa) {
+        if (pessoa.getSexo() != 'M' && pessoa.getSexo() != 'F') {
+            throw new IllegalArgumentException("Sexo deve ser 'M' ou 'F'");
+        }
+
+        if (pessoaRepository.existsByCpf(pessoa.getCpf())) {
+            throw new IllegalArgumentException("CPF já cadastrado");
+        }
+
         return pessoaRepository.save(pessoa);
     }
 
@@ -39,6 +48,10 @@ public class Task {
         Pessoa existingPessoa = pessoaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pessoa not found with id " + id));
         pessoaRepository.delete(existingPessoa);
+    }
+
+    public Optional<Pessoa> getPessoaById(Long id) {
+        return pessoaRepository.findById(id);
     }
 
     public List<Pessoa> getAllPessoas() {
