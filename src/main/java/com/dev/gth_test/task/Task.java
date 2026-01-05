@@ -1,6 +1,9 @@
 package com.dev.gth_test.task;
 
 import com.dev.gth_test.entity.Pessoa;
+import com.dev.gth_test.exception.CpfAlreadyExistsException;
+import com.dev.gth_test.exception.InvalidSexException;
+import com.dev.gth_test.exception.PessoaNotFoundException;
 import com.dev.gth_test.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,19 +23,28 @@ public class Task {
 
     public Pessoa createPessoa(Pessoa pessoa) {
         if (pessoa.getSexo() != 'M' && pessoa.getSexo() != 'F') {
-            throw new IllegalArgumentException("Sexo deve ser 'M' ou 'F'");
+            throw new InvalidSexException(pessoa.getSexo());
         }
 
         if (pessoaRepository.existsByCpf(pessoa.getCpf())) {
-            throw new IllegalArgumentException("CPF já cadastrado");
+            throw new CpfAlreadyExistsException(pessoa.getCpf());
         }
 
         return pessoaRepository.save(pessoa);
     }
 
     public Pessoa updatePessoa(Long id, Pessoa pessoa) {
+        if (pessoa.getSexo() != 'M' && pessoa.getSexo() != 'F') {
+            throw new InvalidSexException(pessoa.getSexo());
+        }
+
         Pessoa existingPessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa not found with id " + id));
+                .orElseThrow(() -> new PessoaNotFoundException(id));
+
+        if (!existingPessoa.getCpf().equals(pessoa.getCpf()) &&
+                pessoaRepository.existsByCpf(pessoa.getCpf())) {
+            throw new CpfAlreadyExistsException(pessoa.getCpf());
+        }
 
         existingPessoa.setNome(pessoa.getNome());
         existingPessoa.setDataNasc(pessoa.getDataNasc());
@@ -46,7 +58,7 @@ public class Task {
 
     public void deletePessoa(Long id) {
         Pessoa existingPessoa = pessoaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa not found with id " + id));
+                .orElseThrow(() -> new PessoaNotFoundException(id));
         pessoaRepository.delete(existingPessoa);
     }
 
@@ -60,11 +72,9 @@ public class Task {
 
 
     public Double calculateIdealWeight(Long id) {
-        Optional<Pessoa> pessoa = pessoaRepository.findById(id);
-        if (pessoa.isPresent()) {
-            return pessoa.get().calculateIdealWeight();
-        }
-        throw new RuntimeException("Pessoa não encontrada com ID: " + id);
+        Pessoa pessoa = pessoaRepository.findById(id)
+                .orElseThrow(() -> new PessoaNotFoundException(id));
+        return pessoa.calculateIdealWeight();
     }
 
 }
