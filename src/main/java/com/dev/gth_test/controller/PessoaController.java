@@ -44,5 +44,7 @@ public class PessoaController {
         pessoaService.deletePessoa(id);
     }
 
+    //TODO: calcular massa
+
 
 }
