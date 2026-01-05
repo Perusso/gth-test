@@ -42,6 +42,15 @@ public class Pessoa {
         this.peso = peso;
     }
 
+    public Double calculateIdealWeight() {
+        if (this.sexo == 'M') {
+            return (72.7 * this.altura) - 58;
+        } else if (this.sexo == 'F') {
+            return (62.1 * this.altura) - 44.7;
+        }
+        throw new IllegalArgumentException("Sexo deve ser 'M' ou 'F'");
+    }
+
     public Long getId() {
         return id;
     }
