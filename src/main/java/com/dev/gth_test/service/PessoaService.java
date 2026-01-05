@@ -44,6 +44,10 @@ public class PessoaService {
                 .collect(Collectors.toList());
     }
 
+    public Double calculateIdealWeight(Long id) {
+        return task.calculateIdealWeight(id);
+    }
+
     private Pessoa toEntity(PessoaDTO dto) {
         Pessoa pessoa = new Pessoa();
         pessoa.setId(dto.getId());

@@ -44,7 +44,10 @@ public class PessoaController {
         pessoaService.deletePessoa(id);
     }
 
-    //TODO: calcular massa
+    @GetMapping("/{id}/peso-ideal")
+    public Double calculateIdealWeight(@PathVariable Long id) {
+        return pessoaService.calculateIdealWeight(id);
+    }
 
 
 }

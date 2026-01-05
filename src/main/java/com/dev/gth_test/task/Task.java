@@ -59,12 +59,12 @@ public class Task {
     }
 
 
-
-
-
-
-
-
-
+    public Double calculateIdealWeight(Long id) {
+        Optional<Pessoa> pessoa = pessoaRepository.findById(id);
+        if (pessoa.isPresent()) {
+            return pessoa.get().calculateIdealWeight();
+        }
+        throw new RuntimeException("Pessoa não encontrada com ID: " + id);
+    }
 
 }
